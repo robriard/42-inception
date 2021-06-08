@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+    mariadb:
+        image: mariadb
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    wordpress:
+        image: wordpress:latest
+        volumes:
+            - ./srcs/wordpress/srcs/html:/var/www/html
+        depends_on:
+            - mariadb
+        links:
+            - mariadb
+        restart: always
+        environment:
+            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./srcs/nginx:/etc/nginx/conf.d
+            - /data/html:/var/www/html
+        ports:
+            - "8080:80"
+        links:
+            - wordpress
+volumes:
+    db_data: {}
