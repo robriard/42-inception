@@ -1,17 +1,24 @@
-FROM			debian:buster
+FROM			alpine:3.12
 LABEL			maintainer="robriard"
 
 
 #	GENERATING DEFAULT START FOLDER
 WORKDIR			/var/www/html
 
-
 #	INSTALL PHP
-RUN				apt-get -qy update && apt-get -qy upgrade \
-&& apt-get -qy install php7.3 php7.3-fpm php-mysqli
+RUN				apk update && apk add --no-cache php7.3 php7.3-fpm php-mysqli
+
 
 #	COPY CONFIGURATION FILES
-COPY			./wp_entrypoint.sh /wp_entrypoint.sh
+COPY			./srcs/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY			./srcs/wp_entrypoint.sh /wp_entrypoint.sh
+RUN				mkdir -p /run/php	\
+&& chmod +x /entrypoint-wordpress.sh
+
+
 
 #	START SERVER
-ENTRYPOINT		[/bin/sh /wp_entrypoint.sh]
+ENTRYPOINT		[/wp_entrypoint.sh]
+
+#	EXPOSE PORT
+EXPOSE			9000

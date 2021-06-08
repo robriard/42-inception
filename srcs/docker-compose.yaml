@@ -13,7 +13,9 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
     wordpress:
-        image: wordpress:latest
+        build:
+            context: ./requirements/wordpress/
+            image: wordpress
         volumes:
             - ./srcs/wordpress/srcs/html:/var/www/html
         depends_on:
@@ -29,12 +31,14 @@ services:
             WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
 
     nginx:
-        image: nginx:alpine
+        build:
+            context: ./requirements/nginx/
+            image: nginx
         volumes:
-            - ./srcs/nginx:/etc/nginx/conf.d
+            - ./requirements/nginx/:/etc/nginx/conf.d
             - /data/html:/var/www/html
         ports:
-            - "8080:80"
+            - "443:443"
         links:
             - wordpress
 volumes:
