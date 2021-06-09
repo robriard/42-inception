@@ -1,41 +1,29 @@
-version: '3.3'
+version: "3.3"
 
 services:
     mariadb:
         image: mariadb
         volumes:
             - db_data:/var/lib/mysql
-        restart: always
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        restart: on-failure
+        env_file:
+            - .env
 
     wordpress:
-        build:
-            context: ./requirements/wordpress/
-            image: wordpress
+        build: ./requirements/wordpress/
         volumes:
-            - ./srcs/wordpress/srcs/html:/var/www/html
+            - ./requirements/wordpress/php/:/var/www/html
         depends_on:
             - mariadb
         links:
             - mariadb
-        restart: always
-        environment:
-            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-            WORDPRESS_DB_USER: ${MYSQL_USER}
-            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-            WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+        restart: on-failure
+        env_file:
+            - .env
 
     nginx:
-        build:
-            context: ./requirements/nginx/
-            image: nginx
+        build: ./requirements/nginx/
         volumes:
-            - ./requirements/nginx/:/etc/nginx/conf.d
             - /data/html:/var/www/html
         ports:
             - "443:443"
