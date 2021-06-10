@@ -26,9 +26,14 @@ RUN			mkdir -p /run/nginx
 #&& mkdir -p /var/www/nginx_index
 #COPY		./srcs/index.html /var/www/nginx_index/index.html
 
+
+# SET HOSTNAME
+COPY			./srcs/hosts /etc/hosts
+
 # START SERVER
+
+RUN		printf "127.0.0.1 robriard.42.fr\n127.0.0.1 www.robriard.42.fr" >> /home/test
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
-#ENTRYPOINT ["/bin/sh"]
 
 #  EXPOSE PORT
 EXPOSE	443

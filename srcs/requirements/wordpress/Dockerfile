@@ -17,6 +17,7 @@ WORKDIR			/var/www/html
 
 # Start server
 ENTRYPOINT		["/wp_entrypoint.sh"]
+RUN			echo "listen = 0.0.0.0:9000" >> /etc/php/7.3/fpm/pool.d/www.conf
 
 # Ports
 EXPOSE			9000

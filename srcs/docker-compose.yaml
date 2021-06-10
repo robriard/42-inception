@@ -5,8 +5,10 @@ services:
         image: mariadb
         container_name: mariadb
         volumes:
-            - db_data:/var/lib/mysql
-        restart: on-failure
+            - db_volume:/var/lib/mysql
+        restart: always
+        networks:
+            - back
         env_file:
             - .env
 
@@ -14,12 +16,13 @@ services:
         build: ./requirements/wordpress/
         container_name: wordpress
         volumes:
-            - ./requirements/wordpress/html:/var/www/html
+            - wp_volume:/var/www/html
         depends_on:
             - mariadb
-        links:
-            - mariadb
-        restart: on-failure
+        networks:
+            - front
+            - back
+        restart: always
         env_file:
             - .env
 
@@ -27,10 +30,27 @@ services:
         build: ./requirements/nginx/
         container_name: nginx
         volumes:
-            - ./requirements/wordpress/html:/var/www/html
+            - wp_volume:/var/www/html
         ports:
             - "443:443"
-        links:
-            - wordpress
+        networks:
+            - front
+        restart: always
+
+networks:
+        front:
+        back:
+
 volumes:
-    db_data: {}
+    wp_volume:
+        driver: local
+        driver_opts:
+            type: 'none'
+            o: 'bind'
+            device: '/home/robriard/data/wp'
+    db_volume:
+            driver: local
+            driver_opts:
+                type: 'none'
+                o: 'bind'
+                device: '/home/robriard/data/db'
