@@ -22,8 +22,9 @@ RUN			openssl req -x509 -nodes							\
 -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl.key		\
 -out /etc/ssl/certs/ssl.crt
 
-RUN			mkdir -p /run/nginx && mkdir -p /var/www/html
-COPY		./srcs/index.html /var/www/html/index.html
+RUN			mkdir -p /run/nginx 
+#&& mkdir -p /var/www/nginx_index
+#COPY		./srcs/index.html /var/www/nginx_index/index.html
 
 # START SERVER
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

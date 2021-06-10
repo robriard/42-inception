@@ -1,22 +1,22 @@
 FROM		debian:buster
-LABEL		maintainer="anclarma"
+LABEL		maintainer="robriard"
 
 # Update
-RUN			apt update -y > /dev/null && apt -y upgrade -y > /dev/null
+RUN			apt update -y && apt -y upgrade -y
 
 # Install php
-RUN			apt install -y php7.3 php7.3-fpm php-mysqli > /dev/null
+RUN			apt install -y php7.3 php7.3-fpm php-mysqli
 
 # Copy confile files
-RUN			mkdir -p /run/php
-COPY		./srcs/wp_entrypoint.sh /wp_entrypoint.sh
-RUN			chmod +x /wp_entrypoint.sh
-COPY		./srcs/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY			./srcs/wp_entrypoint.sh /wp_entrypoint.sh
+COPY			./srcs/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+RUN			mkdir -p /run/php	\
+&&			chmod +x /wp_entrypoint.sh
 
-WORKDIR		/var/www/html
+WORKDIR			/var/www/html
 
 # Start server
-ENTRYPOINT	["/wp_entrypoint.sh"]
+ENTRYPOINT		["/wp_entrypoint.sh"]
 
 # Ports
-EXPOSE		9000
+EXPOSE			9000

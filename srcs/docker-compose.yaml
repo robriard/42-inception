@@ -3,6 +3,7 @@ version: "3.3"
 services:
     mariadb:
         image: mariadb
+        container_name: mariadb
         volumes:
             - db_data:/var/lib/mysql
         restart: on-failure
@@ -11,8 +12,9 @@ services:
 
     wordpress:
         build: ./requirements/wordpress/
+        container_name: wordpress
         volumes:
-            - ./requirements/wordpress/php/:/var/www/html
+            - ./requirements/wordpress/html:/var/www/html
         depends_on:
             - mariadb
         links:
@@ -23,8 +25,9 @@ services:
 
     nginx:
         build: ./requirements/nginx/
+        container_name: nginx
         volumes:
-            - /data/html:/var/www/html
+            - ./requirements/wordpress/html:/var/www/html
         ports:
             - "443:443"
         links:
