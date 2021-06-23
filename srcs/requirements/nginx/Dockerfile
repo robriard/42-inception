@@ -28,11 +28,10 @@ RUN			mkdir -p /run/nginx
 
 
 # SET HOSTNAME
-COPY			./srcs/hosts /etc/hosts
+#COPY			./srcs/hosts /etc/hosts
 
 # START SERVER
 
-RUN		printf "127.0.0.1 robriard.42.fr\n127.0.0.1 www.robriard.42.fr" >> /home/test
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 #  EXPOSE PORT
