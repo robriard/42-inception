@@ -1,13 +1,8 @@
 #!/bin/sh
-
-
-
-cp  /var/www/html/wp-config.php /var/www/html/wp-config-sample.php
-sed -i 's/database_name_here/'$WORDPRESS_DB_NAME'/' /var/www/html/wp-config.php
-sed -i 's/username_here/'$MYSQL_USER'/' /var/www/html/wp-config.php
-sed -i 's/password_here/'$MYSQL_PASSWORD'/' /var/www/html/wp-config.php
-sed -i 's/localhost/'$WORDPRESS_DB_HOST'/' /var/www/html/wp-config.php
-sed -i 's/wp_/'$WORDPRESS_TABLE_PREFIX'/' /var/www/html/wp-config.php
-chown -R www-data:www-data /var/www/html
-
+if  [ ! -f /var/www/wordpress/wp-config.php ];
+then
+    wp core --allow-root download --locale=fr_FR --force 
+    wp core install --allow-root --url=$DOMAIN_NAME --title='Inception Project' --admin_user=$MYSQL_ROOT_USER --admin_password=$MYSQL_ROOT_PASSWORD  --admin_email=$MYSQL_ROOT_EMAIL --path='/var/www/html';
+    wp  user create --allow-root $MYSQL_USER $MYSQL_EMAIL --user_pass=$MYSQL_PASSWORD --role=author
+fi
 php-fpm7.3 -F
