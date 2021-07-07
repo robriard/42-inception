@@ -8,6 +8,7 @@ RUN		chmod +x entrypoint.sh
 
 EXPOSE		3306
 RUN		mkdir -p /var/run/mysqld
+RUN 		chown -R mysql:mysql /var/run/mysqld
 RUN		rm /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY		./srcs/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 ENTRYPOINT	["/bin/sh", "entrypoint.sh"]
