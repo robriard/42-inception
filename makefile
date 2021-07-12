@@ -25,4 +25,7 @@ down:
 ps:
 	docker-compose -f srcs/docker-compose.yaml ps
 
-.PHONY:	up down re ps
+rm: down
+	docker system prune -a
+
+.PHONY:	up down re ps rm
