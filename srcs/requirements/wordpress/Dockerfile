@@ -5,7 +5,7 @@ LABEL		maintainer="robriard"
 RUN			apt update -y && apt -y upgrade -y
 
 # Install php
-RUN			apt install -y php7.3 php7.3-fpm php-mysqli wget
+RUN			apt install -y php7.3 php7.3-fpm php-mysql mariadb-client wget
 RUN			wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN			chmod +x wp-cli.phar
 RUN			mv wp-cli.phar /usr/local/bin/wp

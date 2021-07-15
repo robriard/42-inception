@@ -12,12 +12,12 @@
 
 
 up:
-	docker-compose -f srcs/docker-compose.yaml up -d
+	docker-compose -f srcs/docker-compose.yaml up
 
 all: up
 
 re:
-	docker-compose -f srcs/docker-compose.yaml up --build -d
+	docker-compose -f srcs/docker-compose.yaml up --build
 
 down:
 	docker-compose -f srcs/docker-compose.yaml down
