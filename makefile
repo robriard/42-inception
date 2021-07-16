@@ -10,14 +10,19 @@
 #                                                                              #
 # **************************************************************************** #
 
+VOLUMES = /home/robriard/data
 
 up:
-	docker-compose -f srcs/docker-compose.yaml up
+	@mkdir -p ${VOLUMES}/db/
+	@mkdir -p ${VOLUMES}/wp/
+	docker-compose -f srcs/docker-compose.yaml up -d
 
 all: up
 
 re:
-	docker-compose -f srcs/docker-compose.yaml up --build
+	@mkdir -p ${VOLUMES}/db/
+	@mkdir -p ${VOLUMES}/wp/
+	docker-compose -f srcs/docker-compose.yaml up --build -d
 
 down:
 	docker-compose -f srcs/docker-compose.yaml down

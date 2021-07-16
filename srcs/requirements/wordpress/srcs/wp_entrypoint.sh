@@ -1,12 +1,10 @@
 #!/bin/sh
 if [ $(ls /var/www/html/ | wc -l | sed -e "s/ //g") == "0"]
 then
-	curl -LO https://wordpress.org/latest.tar.gz && tar xzvf latest.tar.gz
-	mv wordpress/* /var/www/html/ && rm -rf latest.tar.gz
+	wp core --allow-root download --locale=fr_FR --force --path='/var/www/html' 
 fi
 if  [ ! -f /var/www/html/wp-config.php ];
 then
-	wp core --allow-root download --locale=fr_FR --force --path='/var/www/html' 
 	while  [ ! -f /var/www/html/wp-config.php ];
 	do   
 		wp core config --allow-root --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=mariadb:3306
