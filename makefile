@@ -33,4 +33,4 @@ ps:
 rm: down
 	docker system prune -a
 
-.PHONY:	up down re ps rm
+.PHONY:	all up down re ps rm
