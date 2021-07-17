@@ -1,38 +1,15 @@
 FROM		alpine:3.12
 LABEL		maintainer="robriard"
 
-
-
-# GENERATING DEFAULT START FOLDER
-WORKDIR		/app
-
-# INSTALL NGINX AND OPENSSL
-RUN			apk update && apk add --no-cache openssl && apk add --no-cache nginx
-
-
-
-# COPY CONFIGURATION FILES AND RUN THE NECESSARIES COMMANDS
-#		copy the configuration file for nginx and create a symbolic link
+RUN		apk update && apk add --no-cache openssl && apk add --no-cache nginx
 COPY		./srcs/nginx.conf /etc/nginx/http.d/default.conf
-RUN			ln -fs /etc/nginx/http.d/default.conf /etc/nginx/conf.d/default.conf
+RUN		ln -fs /etc/nginx/http.d/default.conf /etc/nginx/conf.d/default.conf	\
+&&		openssl req -x509 -nodes						\
+		-subj '/C=FR/ST=PARIS/L=PARIS/O=robriard/CN=localhost'			\
+		-days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl.key		\
+		-out /etc/ssl/certs/ssl.crt						\
+&&		mkdir -p /run/nginx 
 
-#		create ssl certificate
-RUN			openssl req -x509 -nodes							\
--subj '/C=FR/ST=PARIS/L=PARIS/O=robriard/CN=localhost'			\
--days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl.key		\
--out /etc/ssl/certs/ssl.crt
-
-RUN			mkdir -p /run/nginx 
-#&& mkdir -p /var/www/nginx_index
-#COPY		./srcs/index.html /var/www/nginx_index/index.html
-
-
-# SET HOSTNAME
-#COPY			./srcs/hosts /etc/hosts
-
-# START SERVER
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
-
-#  EXPOSE PORT
-EXPOSE	443
+WORKDIR		/app
+EXPOSE		443
+ENTRYPOINT	["nginx", "-g", "daemon off;"]
